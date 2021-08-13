@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import Blueprint, url_for, request, render_template
 from werkzeug.utils import redirect
 
-from forms import AnswerForm
+from forms import AnswerForm, UserCreateForm
 from practice import db
 from practice.models import Question, Answer
 
@@ -20,3 +20,9 @@ def create(question_id):
         db.session.commit()
         return redirect(url_for('question.detail', question_id=question_id))
     return render_template('question/question_detail.html', question=question, form=form)
+
+@bp.route('/signup', methods=('GET', 'POST'))
+def signup():
+    form = UserCreateForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
